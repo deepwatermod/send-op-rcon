@@ -1,0 +1,31 @@
+{
+	"name": "send-op",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "node src/send-op.js",
+		"build": "parcel build src/send-op.js --target node --bundle-node-modules --no-source-maps --out-file server.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"body-parser": "^1.19.0",
+		"cors": "^2.8.5",
+		"express": "^4.17.1"
+	},
+	"devDependencies": {
+		"parcel": "^1.12.4",
+		"parcel-plugin-static-files-copy": "^2.3.1"
+	},
+	"staticFiles": {
+		"staticPath": [
+            {
+				"staticPath": "src/config",
+				"watcherGlob": false,
+                "staticOutDir": "config"
+            }
+        ]
+	}
+}

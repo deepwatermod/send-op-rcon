@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body {
+				background-color: #333;
+				color: white;
+				font-family: sans-serif;
+			}
+
+			.op-input {
+				font-size: 1rem;
+				color: inherit;
+				padding: 0.5em;
+				box-sizing: border-box;
+				min-width: 16em;
+				position: relative;
+			}
+
+			.op-input input {
+				padding: 1em;
+				box-sizing: border-box;
+				display: block;
+				width: 100%;
+				border: 2px solid transparent;
+				background-color: rgba(33, 33, 33, 0.7);
+				color: white;
+				outline: none;
+				margin: 0.5em 0;
+			}
+
+			.op-input input::placeholder {
+				color: rgba(255, 255, 255, 0.6);
+			}
+
+			.op-input input[type="text"] {
+				font-family: monospace;
+			}
+
+			.op-input input[type="submit"] {
+				background-color: white;
+				color: black;
+				font-weight: normal;
+				text-transform: uppercase;
+				box-shadow: 0.25em 0.25em 0.75em rgba(0, 0, 0, 0.2);
+				transition: box-shadow 0.2s ease-in-out;
+			}
+
+			.op-input input[type="submit"]:hover {
+				cursor: pointer;
+				font-weight: bold;
+				transition: box-shadow 0.2s ease-in-out;
+				box-shadow: 0.25em 0.25em 1em rgba(0, 0, 0, 0.3);
+			}
+
+			.op-input input[type="submit"]:disabled {
+				opacity: 0.5;
+                cursor: default;
+			}
+
+			#result-presenter {
+				margin: 1em 0;
+				display: block;
+				padding: 1em;
+				box-sizing: border-box;
+				border-left: 1em solid #8E3;
+			}
+
+            #result-presenter.invalid {
+                border-color: #E32;
+            }
+
+			#result-presenter:empty {
+				display: none;
+			}
+		</style>
+	</head>
+	<script>
+		function handleResponse(statusCode) {
+			document.getElementById("snapshot-op-inp").value = "";
+
+			switch (statusCode) {
+				case 200:
+					document.getElementById("result-presenter").innerHTML = "OP aktiv";
+					return;
+				case 400:
+					document.getElementById("result-presenter").innerHTML =
+                        "Ungültiger Input";
+                    document.getElementById("result-presenter").className="invalid";
+					return;
+				default:
+					document.getElementById("result-presenter").innerHTML =
+						"Server Error";
+                    document.getElementById("result-presenter").className="invalid";
+					return;
+			}
+		}
+
+		function handleSubmit(e) {
+			e.preventDefault();
+
+            var accName = document.getElementById("snapshot-op-inp").value;
+            
+            if(accName.length < 3) return;
+
+			fetch("http://localhost:3398/op-user", {
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+				},
+				method: "POST",
+				body: JSON.stringify({
+					user: accName.toString(),
+				}),
+			})
+				.then((res) => handleResponse(res.status))
+				.catch(() => console.warn("error reaching server"));
+		}
+	</script>
+	<body>
+		<div class="op-input">
+			<form autocomplete="off" onsubmit="return handleSubmit(event)">
+                <input
+					id="snapshot-op-inp"
+					type="text"
+                    placeholder="Minecraft Account Name"
+                    required
+                    minlength="3"
+                    maxlength="100"
+				/>
+				<input type="submit" aria-disabled="true" value="send" />
+			</form>
+			<div id="result-presenter"></div>
+		</div>
+	</body>
+</html>
