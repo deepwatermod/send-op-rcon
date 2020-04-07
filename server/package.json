@@ -1,11 +1,12 @@
 {
-	"name": "send-op",
-	"version": "1.0.0",
+	"name": "send-op-server",
+  "version": "1.1.0",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
 		"start": "node src/send-op.js",
-		"build": "parcel build src/send-op.js --target node --bundle-node-modules --no-source-maps --out-file server.js"
+		"build": "parcel build src/send-op.js --target node --bundle-node-modules --no-source-maps --out-file server.js",
+		"release": "npm run build && node release.js"
 	},
 	"keywords": [],
 	"author": "",
@@ -16,16 +17,18 @@
 		"express": "^4.17.1"
 	},
 	"devDependencies": {
+		"increase-version": "^1.0.4",
+		"npm-build-zip": "^1.0.2",
 		"parcel": "^1.12.4",
 		"parcel-plugin-static-files-copy": "^2.3.1"
 	},
 	"staticFiles": {
 		"staticPath": [
-            {
+			{
 				"staticPath": "src/config",
 				"watcherGlob": false,
-                "staticOutDir": "config"
-            }
-        ]
+				"staticOutDir": "config"
+			}
+		]
 	}
 }
